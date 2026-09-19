@@ -1,0 +1,694 @@
+/* ============================================================
+   ClinicoTrace Clinical Design System
+   Version 1.0 — Bharat Build Hackathon 2026
+   
+   Philosophy: clinical precision over visual flair.
+   Restrained palette, strong typographic hierarchy, no decoration.
+   ============================================================ */
+
+/* Google Fonts loaded via <link> in layout.tsx */
+
+@import "tailwindcss";
+
+/* ---- Design Tokens ---------------------------------------- */
+:root {
+  /* Background */
+  --ct-bg:              #F4F6F8;
+  --ct-bg-alt:          #ECEEF1;
+  --ct-surface:         #FFFFFF;
+  --ct-surface-raised:  #FAFBFC;
+
+  /* Borders */
+  --ct-border:          #DDE1E7;
+  --ct-border-strong:   #C4CAD4;
+  --ct-border-subtle:   #EAEDF1;
+
+  /* Text */
+  --ct-text-primary:    #141820;
+  --ct-text-secondary:  #3E4755;
+  --ct-text-muted:      #7A8494;
+  --ct-text-inverse:    #FFFFFF;
+
+  /* Brand Blue (restrained) */
+  --ct-blue:            #1A5FA8;
+  --ct-blue-dark:       #124380;
+  --ct-blue-hover:      #1753A0;
+  --ct-blue-light:      #EBF2FB;
+  --ct-blue-mid:        #D0E4F7;
+
+  /* Cyan — active states only */
+  --ct-cyan:            #0784A8;
+  --ct-cyan-light:      #E8F7FB;
+
+  /* Safety Colors */
+  --ct-green:           #15803D;
+  --ct-green-mid:       #22C55E;
+  --ct-green-light:     #F0FDF4;
+  --ct-green-border:    #BBF7D0;
+
+  --ct-amber:           #B45309;
+  --ct-amber-mid:       #D97706;
+  --ct-amber-light:     #FFFBEB;
+  --ct-amber-border:    #FDE68A;
+
+  --ct-red:             #B91C1C;
+  --ct-red-mid:         #DC2626;
+  --ct-red-light:       #FEF2F2;
+  --ct-red-border:      #FECACA;
+
+  /* Typography */
+  --ct-font-sans:       'Inter', system-ui, -apple-system, sans-serif;
+  --ct-font-mono:       'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Radius */
+  --ct-radius-sm:       3px;
+  --ct-radius:          5px;
+  --ct-radius-md:       6px;
+  --ct-radius-lg:       8px;
+
+  /* Shadows — restrained */
+  --ct-shadow-xs:       0 1px 2px rgba(0, 0, 0, 0.06);
+  --ct-shadow-sm:       0 1px 4px rgba(0, 0, 0, 0.08);
+  --ct-shadow-md:       0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  /* Spacing */
+  --ct-nav-width:       60px;
+  --ct-header-height:   52px;
+
+  /* Transitions */
+  --ct-transition:      150ms ease;
+  --ct-transition-slow: 250ms ease;
+}
+
+/* ---- Reset & Base ----------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--ct-font-sans);
+  background-color: var(--ct-bg);
+  color: var(--ct-text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ---- Typography Scale ------------------------------------- */
+.ct-text-micro   { font-size: 10px; line-height: 1.4; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+.ct-text-label   { font-size: 11px; line-height: 1.4; font-weight: 500; letter-spacing: 0.02em; }
+.ct-text-body-sm { font-size: 12px; line-height: 1.6; font-weight: 400; }
+.ct-text-body    { font-size: 13px; line-height: 1.6; font-weight: 400; }
+.ct-text-body-md { font-size: 14px; line-height: 1.6; font-weight: 400; }
+.ct-text-ui      { font-size: 13px; line-height: 1.5; font-weight: 500; }
+.ct-text-head-sm { font-size: 13px; line-height: 1.4; font-weight: 600; letter-spacing: -0.01em; }
+.ct-text-head    { font-size: 15px; line-height: 1.4; font-weight: 600; letter-spacing: -0.01em; }
+.ct-text-head-lg { font-size: 18px; line-height: 1.3; font-weight: 600; letter-spacing: -0.02em; }
+.ct-text-mono    { font-family: var(--ct-font-mono); font-size: 12px; line-height: 1.5; }
+
+/* ---- Layout Shell ----------------------------------------- */
+.ct-shell {
+  display: grid;
+  grid-template-areas:
+    "nav header"
+    "nav main";
+  grid-template-columns: var(--ct-nav-width) 1fr;
+  grid-template-rows: var(--ct-header-height) 1fr;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ---- Header ----------------------------------------------- */
+.ct-header {
+  grid-area: header;
+  background: var(--ct-surface);
+  border-bottom: 1px solid var(--ct-border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 0;
+  height: var(--ct-header-height);
+  z-index: 10;
+}
+
+/* ---- Navigation Rail -------------------------------------- */
+.ct-nav-rail {
+  grid-area: nav;
+  background: var(--ct-surface);
+  border-right: 1px solid var(--ct-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0 8px;
+  gap: 2px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.ct-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 46px;
+  border-radius: var(--ct-radius);
+  cursor: pointer;
+  color: var(--ct-text-muted);
+  transition: background var(--ct-transition), color var(--ct-transition);
+  position: relative;
+  border: none;
+  background: transparent;
+  gap: 3px;
+  padding: 0;
+}
+
+.ct-nav-item:hover {
+  background: var(--ct-blue-light);
+  color: var(--ct-blue);
+}
+
+.ct-nav-item.active {
+  background: var(--ct-blue-light);
+  color: var(--ct-blue);
+}
+
+.ct-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--ct-blue);
+  border-radius: 0 2px 2px 0;
+}
+
+.ct-nav-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* ---- Main Content ----------------------------------------- */
+.ct-main {
+  grid-area: main;
+  overflow-y: auto;
+  background: var(--ct-bg);
+}
+
+/* ---- Panels / Surfaces ------------------------------------ */
+.ct-panel {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-radius-md);
+}
+
+.ct-panel-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ct-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ct-panel-body {
+  padding: 14px;
+}
+
+/* ---- Clinical Data Fields --------------------------------- */
+.ct-field-group {
+  display: grid;
+  gap: 1px;
+}
+
+.ct-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ct-field-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ct-text-muted);
+}
+
+.ct-field-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ct-text-primary);
+  line-height: 1.4;
+}
+
+.ct-field-value.mono {
+  font-family: var(--ct-font-mono);
+  font-size: 12px;
+}
+
+/* ---- Buttons ---------------------------------------------- */
+.ct-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  border-radius: var(--ct-radius);
+  font-family: var(--ct-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--ct-transition), border-color var(--ct-transition), color var(--ct-transition);
+  white-space: nowrap;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.ct-btn:focus-visible {
+  outline: 2px solid var(--ct-blue);
+  outline-offset: 2px;
+}
+
+/* Primary */
+.ct-btn-primary {
+  background: var(--ct-blue);
+  color: white;
+  border-color: var(--ct-blue);
+  padding: 8px 16px;
+}
+.ct-btn-primary:hover { background: var(--ct-blue-hover); }
+
+/* Secondary */
+.ct-btn-secondary {
+  background: var(--ct-surface);
+  color: var(--ct-text-secondary);
+  border-color: var(--ct-border-strong);
+  padding: 8px 14px;
+}
+.ct-btn-secondary:hover { background: var(--ct-bg); border-color: var(--ct-border-strong); }
+
+/* Ghost */
+.ct-btn-ghost {
+  background: transparent;
+  color: var(--ct-text-secondary);
+  border-color: transparent;
+  padding: 6px 10px;
+}
+.ct-btn-ghost:hover { background: var(--ct-bg-alt); color: var(--ct-text-primary); }
+
+/* Authorize — clinical action, distinct */
+.ct-btn-authorize {
+  background: var(--ct-blue-dark);
+  color: white;
+  border-color: var(--ct-blue-dark);
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.ct-btn-authorize:hover { background: var(--ct-blue); }
+
+/* Danger */
+.ct-btn-danger {
+  background: var(--ct-red-light);
+  color: var(--ct-red);
+  border-color: var(--ct-red-border);
+  padding: 7px 14px;
+}
+.ct-btn-danger:hover { background: var(--ct-red-border); }
+
+/* Small modifier */
+.ct-btn-sm {
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+/* ---- Badges ----------------------------------------------- */
+.ct-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  line-height: 1.4;
+}
+
+.ct-badge-green  { background: var(--ct-green-light);  color: var(--ct-green);  border-color: var(--ct-green-border); }
+.ct-badge-amber  { background: var(--ct-amber-light);  color: var(--ct-amber);  border-color: var(--ct-amber-border); }
+.ct-badge-red    { background: var(--ct-red-light);    color: var(--ct-red);    border-color: var(--ct-red-border); }
+.ct-badge-blue   { background: var(--ct-blue-light);   color: var(--ct-blue);   border-color: var(--ct-blue-mid); }
+.ct-badge-gray   { background: var(--ct-bg-alt);       color: var(--ct-text-muted); border-color: var(--ct-border); }
+.ct-badge-demo   { background: #FFF7ED; color: #92400E; border-color: #FDE68A; font-size: 10px; }
+
+/* ---- Clinical Alerts -------------------------------------- */
+.ct-alert {
+  border-radius: var(--ct-radius-md);
+  border: 1px solid;
+  padding: 12px 14px;
+}
+
+.ct-alert-amber {
+  background: var(--ct-amber-light);
+  border-color: var(--ct-amber-border);
+  color: var(--ct-amber);
+}
+
+.ct-alert-red {
+  background: var(--ct-red-light);
+  border-color: var(--ct-red-border);
+  color: var(--ct-red);
+}
+
+.ct-alert-green {
+  background: var(--ct-green-light);
+  border-color: var(--ct-green-border);
+  color: var(--ct-green);
+}
+
+.ct-alert-blue {
+  background: var(--ct-blue-light);
+  border-color: var(--ct-blue-mid);
+  color: var(--ct-blue);
+}
+
+/* ---- Tables ----------------------------------------------- */
+.ct-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.ct-table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ct-text-muted);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--ct-border);
+  background: var(--ct-surface-raised);
+}
+
+.ct-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--ct-border-subtle);
+  color: var(--ct-text-secondary);
+  vertical-align: top;
+}
+
+.ct-table tr:last-child td { border-bottom: none; }
+.ct-table tr:hover td { background: var(--ct-bg); }
+
+/* ---- Status Indicators ------------------------------------ */
+.ct-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ct-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ct-status-dot.green  { background: var(--ct-green-mid); }
+.ct-status-dot.amber  { background: var(--ct-amber-mid); }
+.ct-status-dot.red    { background: var(--ct-red-mid); }
+.ct-status-dot.blue   { background: var(--ct-blue); }
+.ct-status-dot.gray   { background: var(--ct-border-strong); }
+
+/* Pulse animation for recording */
+.ct-status-dot.pulse {
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ---- Inputs ----------------------------------------------- */
+.ct-input {
+  width: 100%;
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border-strong);
+  border-radius: var(--ct-radius);
+  color: var(--ct-text-primary);
+  font-family: var(--ct-font-sans);
+  font-size: 13px;
+  padding: 7px 10px;
+  transition: border-color var(--ct-transition);
+  outline: none;
+}
+
+.ct-input:focus {
+  border-color: var(--ct-blue);
+  box-shadow: 0 0 0 3px rgba(26, 95, 168, 0.1);
+}
+
+.ct-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+
+/* ---- Dividers --------------------------------------------- */
+.ct-divider {
+  height: 1px;
+  background: var(--ct-border-subtle);
+  border: none;
+  margin: 0;
+}
+
+/* ---- Clinical Timeline ------------------------------------ */
+.ct-timeline-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.ct-timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 28px;
+  bottom: -8px;
+  width: 1px;
+  background: var(--ct-border);
+}
+
+.ct-timeline-item:last-child::before { display: none; }
+
+.ct-timeline-node {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1.5px solid;
+}
+
+.ct-timeline-node.done {
+  background: var(--ct-green-light);
+  border-color: var(--ct-green);
+  color: var(--ct-green);
+}
+
+.ct-timeline-node.active {
+  background: var(--ct-blue-light);
+  border-color: var(--ct-blue);
+  color: var(--ct-blue);
+  animation: timeline-pulse 1.2s ease-in-out infinite;
+}
+
+.ct-timeline-node.pending {
+  background: var(--ct-bg);
+  border-color: var(--ct-border-strong);
+  color: var(--ct-text-muted);
+}
+
+@keyframes timeline-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 95, 168, 0.3); }
+  50% { box-shadow: 0 0 0 4px rgba(26, 95, 168, 0.1); }
+}
+
+/* ---- Extraction field animation --------------------------- */
+@keyframes field-appear {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ct-field-appear {
+  animation: field-appear 300ms ease forwards;
+}
+
+/* ---- Medication card -------------------------------------- */
+.ct-med-card {
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-radius-md);
+  background: var(--ct-surface);
+  overflow: hidden;
+}
+
+.ct-med-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--ct-surface-raised);
+  border-bottom: 1px solid var(--ct-border-subtle);
+}
+
+.ct-med-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.ct-med-grid-item {
+  padding: 10px 14px;
+  border-right: 1px solid var(--ct-border-subtle);
+  border-bottom: 1px solid var(--ct-border-subtle);
+}
+
+.ct-med-grid-item:nth-child(3n) { border-right: none; }
+
+/* ---- Safety finding card ---------------------------------- */
+.ct-finding-card {
+  border: 1px solid var(--ct-amber-border);
+  border-radius: var(--ct-radius-md);
+  background: var(--ct-amber-light);
+  overflow: hidden;
+}
+
+.ct-finding-card.critical {
+  border-color: var(--ct-red-border);
+  background: var(--ct-red-light);
+}
+
+.ct-finding-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ct-amber-border);
+}
+
+.ct-finding-card.critical .ct-finding-header {
+  border-color: var(--ct-red-border);
+}
+
+.ct-finding-body {
+  padding: 12px 14px;
+}
+
+.ct-finding-explainability {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-radius);
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+/* ---- Auth step -------------------------------------------- */
+.ct-auth-box {
+  border: 1.5px solid var(--ct-blue);
+  border-radius: var(--ct-radius-md);
+  background: var(--ct-surface);
+  padding: 20px;
+}
+
+/* ---- Patient instruction card ----------------------------- */
+.ct-instruction-slot {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ct-border-subtle);
+}
+
+.ct-instruction-slot:last-child { border-bottom: none; }
+
+/* ---- Language switcher ------------------------------------ */
+.ct-lang-tab {
+  padding: 5px 12px;
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-radius);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--ct-surface);
+  color: var(--ct-text-muted);
+  transition: all var(--ct-transition);
+}
+
+.ct-lang-tab:hover { border-color: var(--ct-blue); color: var(--ct-blue); }
+.ct-lang-tab.active {
+  background: var(--ct-blue);
+  border-color: var(--ct-blue);
+  color: white;
+}
+
+/* ---- Scrollbar -------------------------------------------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ct-border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ct-text-muted); }
+
+/* ---- Utilities -------------------------------------------- */
+.ct-separator { height: 1px; background: var(--ct-border-subtle); margin: 12px 0; }
+.ct-muted { color: var(--ct-text-muted); }
+.ct-truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---- Focus visible (accessibility) ------------------------ */
+:focus-visible {
+  outline: 2px solid var(--ct-blue);
+  outline-offset: 2px;
+}
+
+/* ---- Print ------------------------------------------------ */
+@media print {
+  .ct-nav-rail, .ct-header { display: none; }
+  .ct-main { overflow: visible; }
+}
+
+/* ---- Demo mode banner ------------------------------------- */
+.ct-demo-banner {
+  background: #FFF7ED;
+  border-bottom: 1px solid #FDE68A;
+  padding: 4px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #78350F;
+  font-weight: 500;
+}
